@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>할 일 관리 / 待办事项管理 — Aurora Glass</title>
+  <!-- Typography: Inter, Pretendard (Korean), Noto Sans SC (Simplified Chinese) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <style>
+    /* =========================================================================
+       Theme Tokens: Dark Aurora Glass (Default) & Warm Daylight Glass
+       ========================================================================= */
+    :root,
+    html[data-theme="dark"] {
+      --bg-base: #070913;
+      --bg-card: rgba(16, 21, 40, 0.74);
+      --bg-card-solid: #131930;
+      --bg-subtle: rgba(255, 255, 255, 0.045);
+      --bg-hover: rgba(255, 255, 255, 0.085);
+      --bg-input-focus: rgba(20, 27, 52, 0.94);
+      --ink-primary: #f6f8ff;
+      --ink-secondary: #a8b4d4;
+      --ink-muted: #6f7b9c;
+      --border-hairline: rgba(255, 255, 255, 0.09);
+      --border-strong: rgba(167, 139, 250, 0.38);
+      --card-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
+      --orb-1: rgba(124, 58, 237, 0.42);
+      --orb-2: rgba(14, 165, 233, 0.34);
+      --orb-3: rgba(236, 72, 153, 0.24);
+      --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #38bdf8 100%);
+      --accent-glow: rgba(139, 92, 246, 0.35);
+      --accent-text: #a78bfa;
+      --status-active-bg: rgba(129, 140, 248, 0.16);
+      --status-active-text: #c4b5fd;
+      --status-done-bg: rgba(16, 185, 129, 0.16);
+      --status-done-text: #34d399;
+      --due-today-bg: rgba(245, 158, 11, 0.18);
+      --due-today-text: #fbbf24;
+      --due-overdue-bg: rgba(244, 63, 94, 0.2);
+      --due-overdue-text: #fda4af;
+      --star-active: #fbbf24;
+      --star-glow: rgba(251, 191, 36, 0.32);
+      --ring-track: rgba(255, 255, 255, 0.1);
+      --ring-stroke: url(#auroraGrad);
+      --danger: #fb7185;
+      --danger-solid: #e11d48;
+      --danger-hover: #be123c;
+      --danger-soft: rgba(244, 63, 94, 0.15);
+      --toast-bg: rgba(19, 25, 48, 0.94);
+      --modal-backdrop: rgba(3, 5, 14, 0.7);
+      --modal-bg: #131930;
+      --shadow-card:
+        0 24px 70px -15px rgba(0, 0, 0, 0.68),
+        0 0 0 1px rgba(255, 255, 255, 0.06);
+      --shadow-modal:
+        0 30px 80px -15px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      --spotlight-color: rgba(139, 92, 246, 0.14);
+      --select-option-bg: #131930;
+    }
+
+    html[data-theme="light"] {
+      --bg-base: #fbf6ef;
+      --bg-card: rgba(255, 252, 247, 0.84);
+      --bg-card-solid: #fffdf9;
+      --bg-subtle: rgba(120, 72, 32, 0.045);
+      --bg-hover: rgba(120, 72, 32, 0.085);
+      --bg-input-focus: #ffffff;
+      --ink-primary: #241914;
+      --ink-secondary: #695447;
+      --ink-muted: #9a8373;
+      --border-hairline: rgba(66, 40, 20, 0.1);
+      --border-strong: rgba(217, 119, 6, 0.38);
+      --card-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.92);
+      --orb-1: rgba(251, 191, 36, 0.35);
+      --orb-2: rgba(251, 113, 133, 0.24);
+      --orb-3: rgba(249, 115, 22, 0.22);
+      --accent-gradient: linear-gradient(135deg, #d97706 0%, #e11d48 100%);
+      --accent-glow: rgba(217, 119, 6, 0.25);
+      --accent-text: #b45309;
+      --status-active-bg: rgba(217, 119, 6, 0.12);
+      --status-active-text: #b45309;
+      --status-done-bg: rgba(5, 150, 105, 0.12);
+      --status-done-text: #047857;
+      --due-today-bg: rgba(217, 119, 6, 0.16);
+      --due-today-text: #b45309;
+      --due-overdue-bg: rgba(220, 38, 38, 0.14);
+      --due-overdue-text: #b91c1c;
+      --star-active: #d97706;
+      --star-glow: rgba(217, 119, 6, 0.28);
+      --ring-track: rgba(66, 40, 20, 0.1);
+      --ring-stroke: url(#daylightGrad);
+      --danger: #dc2626;
+      --danger-solid: #dc2626;
+      --danger-hover: #b91c1c;
+      --danger-soft: rgba(220, 38, 38, 0.1);
+      --toast-bg: rgba(36, 25, 20, 0.92);
+      --modal-backdrop: rgba(36, 25, 20, 0.42);
+      --modal-bg: #fffdf9;
+      --shadow-card:
+        0 24px 64px -16px rgba(92, 56, 28, 0.14),
+        0 0 0 1px rgba(66, 40, 20, 0.06);
+      --shadow-modal:
+        0 28px 70px -14px rgba(56, 32, 14, 0.26),
+        0 0 0 1px rgba(66, 40, 20, 0.08);
+      --spotlight-color: rgba(245, 158, 11, 0.14);
+      --select-option-bg: #fffdf9;
+    }
+
+    :root {
+      --spring: cubic-bezier(0.22, 1, 0.36, 1);
+      --font-stack: 'Inter', 'Pretendard', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-base);
+      color: var(--ink-primary);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 36px 18px 84px;
+      line-height: 1.5;
+      overflow-x: hidden;
+      position: relative;
+      transition: background-color 0.45s var(--spring), color 0.35s ease;
+    }
+
+    /* =========================================================================
+       Dynamic Ambient Light Orbs
+       ========================================================================= */
+    .aurora-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(92px);
+      opacity: 0.85;
+      transition: background 0.55s ease;
+      will-change: transform;
+    }
+
+    .orb-1 {
+      width: 480px;
+      height: 480px;
+      top: -120px;
+      left: -80px;
+      background: var(--orb-1);
+      animation: driftOrb1 16s ease-in-out infinite alternate;
+    }
+
+    .orb-2 {
+      width: 540px;
+      height: 540px;
+      bottom: -150px;
+      right: -100px;
+      background: var(--orb-2);
+      animation: driftOrb2 20s ease-in-out infinite alternate;
+    }
+
+    .orb-3 {
+      width: 360px;
+      height: 360px;
+      top: 44%;
+      left: 56%;
+      background: var(--orb-3);
+      animation: driftOrb3 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes driftOrb1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(70px, 55px) scale(1.12); }
+    }
+
+    @keyframes driftOrb2 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-75px, -50px) scale(1.08); }
+    }
+
+    @keyframes driftOrb3 {
+      0% { transform: translate(-50%, -50%) scale(0.95); }
+      100% { transform: translate(-36%, -64%) scale(1.15); }
+    }
+
+    /* =========================================================================
+       Main Glass Card with Spotlight & Subtle Tilt
+       ========================================================================= */
+    .scene-wrapper {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 780px;
+      perspective: 1200px;
+    }
+
+    .app-shell {
+      position: relative;
+      width: 100%;
+      background: var(--bg-card);
+      backdrop-filter: blur(28px) saturate(165%);
+      -webkit-backdrop-filter: blur(28px) saturate(165%);
+      border: 1px solid var(--border-hairline);
+      border-radius: 26px;
+      box-shadow: var(--shadow-card), var(--card-highlight);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+      transition:
+        transform 0.25s var(--spring),
+        background-color 0.4s ease,
+        border-color 0.35s ease,
+        box-shadow 0.4s ease;
+    }
+
+    .app-shell.is-tilting {
+      transition:
+        transform 0.08s linear,
+        background-color 0.4s ease,
+        border-color 0.35s ease,
+        box-shadow 0.4s ease;
+    }
+
+    .spotlight-layer {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      background: radial-gradient(
+        540px circle at var(--mouse-x, 50%) var(--mouse-y, 0%),
+        var(--spotlight-color),
+        transparent 70%
+      );
+    }
+
+    .app-shell:hover .spotlight-layer {
+      opacity: 1;
+    }
+
+    .app-inner {
+      position: relative;
+      z-index: 2;
+      padding: 32px 34px 28px;
+    }
+
+    /* =========================================================================
+       Top Bar: Bilingual Date + Theme Switcher
+       ========================================================================= */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      padding: 6px 13px;
+      border-radius: 999px;
+    }
+
+    .date-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      color: var(--ink-primary);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s var(--spring);
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    /* =========================================================================
+       Header & Circular Completion Progress Ring
+       ========================================================================= */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .title-group h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--ink-primary);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .title-divider {
+      color: var(--ink-muted);
+      font-weight: 400;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--ink-secondary);
+      margin-top: 4px;
+    }
+
+    .progress-widget {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      padding: 10px 16px;
+      border-radius: 18px;
+      flex-shrink: 0;
+      box-shadow: var(--card-highlight);
+    }
+
+    .ring-wrapper {
+      position: relative;
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+    }
+
+    .ring-svg {
+      transform: rotate(-90deg);
+      width: 52px;
+      height: 52px;
+    }
+
+    .ring-track {
+      fill: none;
+      stroke: var(--ring-track);
+      stroke-width: 4;
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke: var(--ring-stroke);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 131.95; /* 2 * PI * 21 */
+      stroke-dashoffset: 131.95;
+      transition: stroke-dashoffset 0.7s var(--spring);
+      filter: drop-shadow(0 0 6px var(--accent-glow));
+    }
+
+    .ring-percent {
+      position: absolute;
+      font-size: 11.5px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink-primary);
+    }
+
+    .progress-labels {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .progress-title {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .progress-count {
+      font-size: 13px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink-primary);
+    }
+
+    /* =========================================================================
+       Composer: Main Input + Category, Priority, Due Date
+       ========================================================================= */
+    .composer {
+      margin-top: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .input-main-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      padding: 6px 6px 6px 16px;
+      transition: all 0.25s var(--spring);
+    }
+
+    .input-main-row:focus-within {
+      background: var(--bg-input-focus);
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+
+    .todo-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14.5px;
+      color: var(--ink-primary);
+      outline: none;
+      padding: 8px 0;
+      min-width: 0;
+    }
+
+    .todo-input::placeholder {
+      color: var(--ink-muted);
+      font-size: 13.5px;
+    }
+
+    .btn-add {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-gradient);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 6px 18px -4px var(--accent-glow);
+      transition: transform 0.2s var(--spring), filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-add:hover {
+      transform: translateY(-1.5px);
+      filter: brightness(1.06);
+      box-shadow: 0 10px 24px -4px var(--accent-glow);
+    }
+
+    .btn-add:active {
+      transform: scale(0.97);
+    }
+
+    .composer-meta-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .meta-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      padding: 7px 11px;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .meta-field:focus-within {
+      border-color: var(--border-strong);
+      background: var(--bg-input-focus);
+    }
+
+    .meta-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      letter-spacing: 0.01em;
+    }
+
+    .meta-select,
+    .meta-date {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-primary);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .meta-select option {
+      background: var(--select-option-bg);
+      color: var(--ink-primary);
+    }
+
+    html[data-theme="dark"] .meta-date {
+      color-scheme: dark;
+    }
+
+    html[data-theme="light"] .meta-date {
+      color-scheme: light;
+    }
+
+    /* =========================================================================
+       Search, Sort & Quick Actions Bar
+       ========================================================================= */
+    .search-sort-bar {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 210px;
+      display: flex;
+      align-items: center;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      padding: 0 11px;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--border-strong);
+      background: var(--bg-input-focus);
+    }
+
+    .search-icon {
+      color: var(--ink-muted);
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+
+    .search-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 12.5px;
+      color: var(--ink-primary);
+      padding: 8px 0;
+      outline: none;
+    }
+
+    .search-input::placeholder {
+      color: var(--ink-muted);
+    }
+
+    .search-clear-btn {
+      background: transparent;
+      border: none;
+      color: var(--ink-muted);
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 6px;
+      display: none;
+      font-size: 12px;
+    }
+
+    .search-clear-btn.visible {
+      display: inline-flex;
+    }
+
+    .search-clear-btn:hover {
+      color: var(--ink-primary);
+      background: var(--bg-hover);
+    }
+
+    .sort-select {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      color: var(--ink-primary);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .sort-select:hover,
+    .sort-select:focus {
+      border-color: var(--border-strong);
+      background: var(--bg-hover);
+    }
+
+    .sort-select option {
+      background: var(--select-option-bg);
+      color: var(--ink-primary);
+    }
+
+    /* =========================================================================
+       Status Filter Tabs + Category Filter Pills
+       ========================================================================= */
+    .filter-section {
+      margin-top: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-tabs {
+      position: relative;
+      display: inline-flex;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      padding: 3px;
+    }
+
+    .tab-pill {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      left: 3px;
+      background: var(--bg-card-solid);
+      border: 1px solid var(--border-hairline);
+      border-radius: 9px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+      transition: transform 0.35s var(--spring), width 0.35s var(--spring);
+      z-index: 1;
+    }
+
+    .tab-btn {
+      position: relative;
+      z-index: 2;
+      background: transparent;
+      border: none;
+      padding: 6px 13px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      border-radius: 9px;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      color: var(--ink-primary);
+      font-weight: 600;
+    }
+
+    .action-buttons-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-secondary-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      color: var(--ink-secondary);
+      padding: 6px 11px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary-action:hover:not(:disabled) {
+      color: var(--ink-primary);
+      background: var(--bg-hover);
+      border-color: var(--border-strong);
+    }
+
+    .btn-secondary-action:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+    }
+
+    .btn-clear-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      color: var(--ink-secondary);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-clear-all:hover:not(:disabled) {
+      color: var(--danger);
+      border-color: rgba(244, 63, 94, 0.35);
+      background: var(--danger-soft);
+    }
+
+    .btn-clear-all:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+    }
+
+    .category-pills {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .cat-pill {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      color: var(--ink-secondary);
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s var(--spring);
+    }
+
+    .cat-pill:hover {
+      color: var(--ink-primary);
+      background: var(--bg-hover);
+    }
+
+    .cat-pill.active {
+      background: var(--accent-gradient);
+      color: #ffffff;
+      border-color: transparent;
+      font-weight: 600;
+      box-shadow: 0 4px 12px -3px var(--accent-glow);
+    }
+
+    /* =========================================================================
+       Todo Items: Spring Checkbox, Star Pin, Badges, Inline Edit, Delete
+       ========================================================================= */
+    .todo-list {
+      list-style: none;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      box-shadow: var(--card-highlight);
+      transition:
+        transform 0.35s var(--spring),
+        opacity 0.3s ease,
+        filter 0.3s ease,
+        border-color 0.22s ease,
+        background-color 0.22s ease;
+      animation: itemEnter 0.42s var(--spring) forwards;
+    }
+
+    .todo-item.pinned {
+      border-color: rgba(251, 191, 36, 0.32);
+    }
+
+    @keyframes itemEnter {
+      from {
+        opacity: 0;
+        filter: blur(5px);
+        transform: translateY(10px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .todo-item.removing {
+      opacity: 0;
+      filter: blur(5px);
+      transform: translateX(18px) scale(0.97);
+    }
+
+    .todo-item:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-hover);
+      transform: translateY(-1px);
+    }
+
+    .todo-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Spring SVG Checkbox */
+    .checkbox-custom {
+      position: relative;
+      width: 22px;
+      height: 22px;
+      margin-top: 1px;
+      border-radius: 7px;
+      border: 1.5px solid var(--ink-muted);
+      background: transparent;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.25s var(--spring);
+    }
+
+    .checkbox-custom:hover {
+      border-color: var(--accent-text);
+    }
+
+    .todo-item.completed .checkbox-custom {
+      background: var(--accent-gradient);
+      border-color: transparent;
+      box-shadow: 0 0 12px var(--accent-glow);
+      animation: checkSpring 0.38s var(--spring);
+    }
+
+    @keyframes checkSpring {
+      0% { transform: scale(1); }
+      40% { transform: scale(0.8); }
+      75% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    .check-svg {
+      width: 13px;
+      height: 13px;
+      stroke: #ffffff;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+      transition: stroke-dashoffset 0.3s var(--spring) 0.05s;
+    }
+
+    .todo-item.completed .check-svg {
+      stroke-dashoffset: 0;
+    }
+
+    .todo-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .todo-text {
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--ink-primary);
+      word-break: break-word;
+      cursor: text;
+      transition: color 0.25s ease;
+    }
+
+    .todo-item.completed .todo-text {
+      color: var(--ink-muted);
+      text-decoration: line-through;
+      text-decoration-thickness: 1.5px;
+    }
+
+    .inline-edit-input {
+      width: 100%;
+      background: var(--bg-input-focus);
+      border: 1px solid var(--border-strong);
+      border-radius: 9px;
+      padding: 6px 10px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink-primary);
+      outline: none;
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .todo-badges {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .badge-status-active {
+      background: var(--status-active-bg);
+      color: var(--status-active-text);
+    }
+
+    .badge-status-done {
+      background: var(--status-done-bg);
+      color: var(--status-done-text);
+    }
+
+    .badge-cat {
+      background: var(--bg-card-solid);
+      border: 1px solid var(--border-hairline);
+      color: var(--ink-secondary);
+    }
+
+    .badge-prio-high {
+      background: rgba(244, 63, 94, 0.16);
+      color: var(--danger);
+    }
+
+    .badge-prio-normal {
+      background: rgba(56, 189, 248, 0.15);
+      color: #0284c7;
+    }
+
+    html[data-theme="dark"] .badge-prio-normal {
+      color: #7dd3fc;
+    }
+
+    .badge-prio-low {
+      background: var(--bg-subtle);
+      color: var(--ink-muted);
+    }
+
+    .badge-due {
+      background: var(--bg-subtle);
+      color: var(--ink-secondary);
+    }
+
+    .badge-due-today {
+      background: var(--due-today-bg);
+      color: var(--due-today-text);
+    }
+
+    .badge-due-overdue {
+      background: var(--due-overdue-bg);
+      color: var(--due-overdue-text);
+    }
+
+    .todo-time {
+      color: var(--ink-muted);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .todo-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .icon-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--ink-secondary);
+      padding: 6px 8px;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s var(--spring);
+    }
+
+    .icon-action-btn:hover {
+      background: var(--bg-hover);
+      color: var(--ink-primary);
+    }
+
+    .icon-action-btn.star-btn.is-starred {
+      color: var(--star-active);
+      filter: drop-shadow(0 0 6px var(--star-glow));
+    }
+
+    .icon-action-btn.del-btn:hover {
+      color: var(--danger);
+      background: var(--danger-soft);
+      border-color: rgba(244, 63, 94, 0.25);
+    }
+
+    /* =========================================================================
+       Empty State, Footer & Toast Notification
+       ========================================================================= */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--ink-secondary);
+    }
+
+    .empty-state.visible {
+      display: flex;
+      animation: itemEnter 0.4s var(--spring);
+    }
+
+    .empty-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      display: grid;
+      place-items: center;
+      color: var(--ink-muted);
+      margin-bottom: 14px;
+    }
+
+    .empty-title {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--ink-primary);
+      margin-bottom: 4px;
+    }
+
+    .empty-desc {
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    .footer-bar {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    .toast-banner {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translate(-50%, 20px);
+      background: var(--toast-bg);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 500;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.35s var(--spring);
+    }
+
+    .toast-banner.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* =========================================================================
+       Bilingual Glass Modals (알림 / 提示 & 전체 삭제 확인 / 确认清空)
+       ========================================================================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: var(--modal-backdrop);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--modal-bg);
+      color: var(--ink-primary);
+      border: 1px solid var(--border-hairline);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: var(--shadow-modal), var(--card-highlight);
+      transform: scale(0.94) translateY(10px);
+      transition: transform 0.32s var(--spring);
+    }
+
+    .modal-backdrop.open .modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .modal-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .modal-icon.warn {
+      background: var(--status-active-bg);
+      color: var(--status-active-text);
+    }
+
+    .modal-icon.danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .modal-body {
+      font-size: 13.5px;
+      color: var(--ink-secondary);
+      line-height: 1.65;
+      margin-bottom: 22px;
+    }
+
+    .modal-body p + p {
+      margin-top: 6px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn-modal {
+      padding: 9px 16px;
+      border-radius: 11px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-modal-cancel {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-hairline);
+      color: var(--ink-secondary);
+    }
+
+    .btn-modal-cancel:hover {
+      background: var(--bg-hover);
+      color: var(--ink-primary);
+    }
+
+    .btn-modal-primary {
+      background: var(--accent-gradient);
+      border: none;
+      color: #ffffff;
+      box-shadow: 0 6px 16px -4px var(--accent-glow);
+    }
+
+    .btn-modal-primary:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn-modal-danger {
+      background: var(--danger-solid);
+      border: 1px solid var(--danger-solid);
+      color: #ffffff;
+    }
+
+    .btn-modal-danger:hover {
+      background: var(--danger-hover);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 16px 12px 72px;
+      }
+      .app-inner {
+        padding: 20px 16px;
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .progress-widget {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .input-main-row {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+      }
+      .btn-add {
+        justify-content: center;
+      }
+      .composer-meta-row {
+        grid-template-columns: 1fr;
+      }
+      .todo-item {
+        flex-direction: column;
+      }
+      .todo-actions {
+        align-self: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Dynamic Ambient Aurora Orbs -->
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="scene-wrapper">
+    <main class="app-shell" id="appShell">
+      <div class="spotlight-layer" id="spotlight"></div>
+
+      <div class="app-inner">
+        <!-- Top Utility Bar -->
+        <div class="top-bar">
+          <div class="date-badge">
+            <span class="date-dot"></span>
+            <span id="bilingualDate">로딩 중... / 加载中...</span>
+          </div>
+
+          <button type="button" class="theme-toggle-btn" id="themeToggleBtn">
+            <span id="themeIcon">☀️</span>
+            <span id="themeLabel">暖阳玻璃日间 / Warm Daylight</span>
+          </button>
+        </div>
+
+        <!-- Header & Circular Completion Ring -->
+        <header class="header">
+          <div>
+            <div class="title-group">
+              <h1>
+                <span>할 일 관리</span>
+                <span class="title-divider">/</span>
+                <span>待办事项管理</span>
+              </h1>
+            </div>
+            <p class="subtitle">오늘의 핵심 업무를 정돈하세요 · 专注当下，高效完成今日清单</p>
+          </div>
+
+          <div class="progress-widget" aria-label="완료율 / 完成率">
+            <div class="ring-wrapper">
+              <svg class="ring-svg" viewBox="0 0 52 52">
+                <defs>
+                  <linearGradient id="auroraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#8b5cf6" />
+                    <stop offset="55%" stop-color="#38bdf8" />
+                    <stop offset="100%" stop-color="#34d399" />
+                  </linearGradient>
+                  <linearGradient id="daylightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#d97706" />
+                    <stop offset="60%" stop-color="#e11d48" />
+                    <stop offset="100%" stop-color="#059669" />
+                  </linearGradient>
+                </defs>
+                <circle class="ring-track" cx="26" cy="26" r="21"></circle>
+                <circle class="ring-fill" id="ringFill" cx="26" cy="26" r="21"></circle>
+              </svg>
+              <span class="ring-percent" id="ringPercent">0%</span>
+            </div>
+            <div class="progress-labels">
+              <span class="progress-title">완료율 / 完成率</span>
+              <span class="progress-count" id="progressCount">0 / 0 완료 · 已完成</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Task Composer -->
+        <section class="composer">
+          <form class="input-main-row" id="todoForm" novalidate>
+            <input
+              type="text"
+              id="todoInput"
+              class="todo-input"
+              placeholder="새로운 할 일을 입력하세요 / 请输入新的待办事项..."
+              autocomplete="off"
+            />
+            <button type="submit" class="btn-add">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>할 일 추가 / 添加待办</span>
+            </button>
+          </form>
+
+          <div class="composer-meta-row">
+            <label class="meta-field">
+              <span class="meta-label">카테고리 / 分类标签</span>
+              <select id="categorySelect" class="meta-select">
+                <option value="work">업무 / 工作</option>
+                <option value="study">학습 / 学习</option>
+                <option value="life">생활 / 生活</option>
+                <option value="other">기타 / 其他</option>
+              </select>
+            </label>
+
+            <label class="meta-field">
+              <span class="meta-label">우선순위 / 优先级</span>
+              <select id="prioritySelect" class="meta-select">
+                <option value="normal" selected>보통 / 普通</option>
+                <option value="high">긴급 / 紧急</option>
+                <option value="low">여유 / 常规</option>
+              </select>
+            </label>
+
+            <label class="meta-field">
+              <span class="meta-label">마감일 / 截止日期</span>
+              <input type="date" id="dueDateInput" class="meta-date" />
+            </label>
+          </div>
+        </section>
+
+        <!-- Search & Sort Bar -->
+        <section class="search-sort-bar">
+          <div class="search-box">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              id="searchInput"
+              class="search-input"
+              placeholder="할 일 검색 / 搜索待办关键词..."
+              autocomplete="off"
+            />
+            <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="검색어 지우기 / 清除搜索">✕</button>
+          </div>
+
+          <select id="sortSelect" class="sort-select" aria-label="정렬 기준 / 排序方式">
+            <option value="default">정렬: 별표·최신순 / 排序: 星标·最新</option>
+            <option value="priority">정렬: 우선순위순 / 排序: 优先级</option>
+            <option value="dueDate">정렬: 마감일순 / 排序: 截止日期</option>
+          </select>
+        </section>
+
+        <!-- Status Tabs, Category Pills & Batch Actions -->
+        <section class="filter-section">
+          <div class="status-row">
+            <div class="filter-tabs" id="filterTabs" role="tablist">
+              <div class="tab-pill" id="tabPill"></div>
+              <button type="button" class="tab-btn active" data-status="all">전체 / 全部</button>
+              <button type="button" class="tab-btn" data-status="active">진행 중 / 进行中</button>
+              <button type="button" class="tab-btn" data-status="completed">완료됨 / 已完成</button>
+            </div>
+
+            <div class="action-buttons-group">
+              <button type="button" class="btn-secondary-action" id="clearCompletedBtn">
+                <span>완료 정리 / 清理已完成</span>
+              </button>
+              <button type="button" class="btn-secondary-action" id="exportSummaryBtn">
+                <span>요약 복사 / 复制清单</span>
+              </button>
+              <button type="button" class="btn-clear-all" id="clearAllBtn">
+                <span>전체 삭제 / 一键清空</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="category-pills" id="categoryPills">
+            <button type="button" class="cat-pill active" data-category="all">전체 카테고리 / 全部分类</button>
+            <button type="button" class="cat-pill" data-category="work">업무 / 工作</button>
+            <button type="button" class="cat-pill" data-category="study">학습 / 学习</button>
+            <button type="button" class="cat-pill" data-category="life">생활 / 生活</button>
+            <button type="button" class="cat-pill" data-category="other">기타 / 其他</button>
+          </div>
+        </section>
+
+        <!-- Todo List -->
+        <ul class="todo-list" id="todoList"></ul>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="3"></rect>
+              <line x1="8" y1="9" x2="16" y2="9"></line>
+              <line x1="8" y1="13" x2="13" y2="13"></line>
+            </svg>
+          </div>
+          <p class="empty-title" id="emptyTitle">등록된 할 일이 없습니다 / 暂无待办事项</p>
+          <p class="empty-desc" id="emptyDesc">위 입력창에 새로운 일정을 추가해 보세요 / 请在上方输入框添加新的任务</p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer-bar">
+          <span>더블클릭으로 바로 수정 가능 · 双击标题可直接编辑 / 自动保存至本地</span>
+          <span id="remainingText">남은 할 일 0건 / 剩余 0 项</span>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-banner" id="toastBanner" role="status" aria-live="polite"></div>
+
+  <!-- Modal 1: Empty Input Validation Alert (알림 / 提示) -->
+  <div class="modal-backdrop" id="alertModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-icon warn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <h2 class="modal-title">알림 / 提示</h2>
+      </div>
+      <div class="modal-body">
+        <p>할 일 내용을 입력해 주세요. 빈칸이나 공백만 입력할 수 없습니다.</p>
+        <p>请输入待办事项内容，不能留空或仅输入空格。</p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-modal btn-modal-primary" id="alertConfirmBtn">확인 / 确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Clear All Confirmation (전체 삭제 확인 / 确认清空) -->
+  <div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-icon danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <h2 class="modal-title">전체 삭제 확인 / 确认清空</h2>
+      </div>
+      <div class="modal-body">
+        <p>모든 할 일 목록을 삭제하시겠습니까? 삭제된 항목은 되돌릴 수 없습니다.</p>
+        <p>确定要清空所有待办事项吗？清空后将无法恢复。</p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-modal btn-modal-cancel" id="confirmCancelBtn">취소 / 取消</button>
+        <button type="button" class="btn-modal btn-modal-danger" id="confirmOkBtn">확인 / 确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'kr_cn_aurora_glass_todos_v3';
+      const THEME_KEY = 'kr_cn_aurora_glass_theme_v3';
+
+      const CATEGORY_LABELS = {
+        work: '업무 / 工作',
+        study: '학습 / 学习',
+        life: '생활 / 生活',
+        other: '기타 / 其他'
+      };
+
+      const PRIORITY_LABELS = {
+        high: '긴급 / 紧急',
+        normal: '보통 / 普通',
+        low: '여유 / 常规'
+      };
+
+      const PRIORITY_WEIGHT = {
+        high: 3,
+        normal: 2,
+        low: 1
+      };
+
+      function getTodayISO() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }
+
+      const defaultTodos = [
+        {
+          id: 'init-1',
+          text: '한중 파트너십 제안서 검토 및 피드백 / 审阅韩中合作方案并反馈',
+          completed: false,
+          pinned: true,
+          category: 'work',
+          priority: 'high',
+          dueDate: getTodayISO(),
+          createdAt: '09:15'
+        },
+        {
+          id: 'init-2',
+          text: '비즈니스 중국어 회화 복습 / 复习商务韩语口语表达',
+          completed: false,
+          pinned: false,
+          category: 'study',
+          priority: 'normal',
+          dueDate: '',
+          createdAt: '10:40'
+        },
+        {
+          id: 'init-3',
+          text: '주간 정산 내역 확인 완료 / 完成本周对账明细核对',
+          completed: true,
+          pinned: false,
+          category: 'life',
+          priority: 'low',
+          dueDate: '',
+          createdAt: '14:20'
+        }
+      ];
+
+      let todos = loadTodos();
+      let statusFilter = 'all';
+      let categoryFilter = 'all';
+      let searchQuery = '';
+      let sortBy = 'default';
+      let currentTheme = loadTheme();
+      let toastTimer = null;
+
+      // DOM References
+      const htmlEl = document.documentElement;
+      const appShell = document.getElementById('appShell');
+      const spotlight = document.getElementById('spotlight');
+      const bilingualDateEl = document.getElementById('bilingualDate');
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeLabel = document.getElementById('themeLabel');
+
+      const todoForm = document.getElementById('todoForm');
+      const todoInput = document.getElementById('todoInput');
+      const categorySelect = document.getElementById('categorySelect');
+      const prioritySelect = document.getElementById('prioritySelect');
+      const dueDateInput = document.getElementById('dueDateInput');
+
+      const searchInput = document.getElementById('searchInput');
+      const searchClearBtn = document.getElementById('searchClearBtn');
+      const sortSelect = document.getElementById('sortSelect');
+
+      const filterTabs = document.getElementById('filterTabs');
+      const tabPill = document.getElementById('tabPill');
+      const tabBtns = Array.from(filterTabs.querySelectorAll('.tab-btn'));
+      const categoryPills = Array.from(document.querySelectorAll('#categoryPills .cat-pill'));
+
+      const clearCompletedBtn = document.getElementById('clearCompletedBtn');
+      const exportSummaryBtn = document.getElementById('exportSummaryBtn');
+      const clearAllBtn = document.getElementById('clearAllBtn');
+
+      const todoListEl = document.getElementById('todoList');
+      const emptyStateEl = document.getElementById('emptyState');
+      const emptyTitleEl = document.getElementById('emptyTitle');
+      const emptyDescEl = document.getElementById('emptyDesc');
+      const remainingTextEl = document.getElementById('remainingText');
+      const toastBanner = document.getElementById('toastBanner');
+
+      // Progress Ring
+      const ringFill = document.getElementById('ringFill');
+      const ringPercent = document.getElementById('ringPercent');
+      const progressCount = document.getElementById('progressCount');
+      const CIRCUMFERENCE = 2 * Math.PI * 21; // ~131.95
+
+      // Modals
+      const alertModal = document.getElementById('alertModal');
+      const alertConfirmBtn = document.getElementById('alertConfirmBtn');
+      const confirmModal = document.getElementById('confirmModal');
+      const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+      const confirmOkBtn = document.getElementById('confirmOkBtn');
+
+      function loadTheme() {
+        try {
+          const saved = localStorage.getItem(THEME_KEY);
+          return saved === 'light' ? 'light' : 'dark';
+        } catch (err) {
+          return 'dark';
+        }
+      }
+
+      function applyTheme(theme) {
+        currentTheme = theme;
+        htmlEl.setAttribute('data-theme', theme);
+        try {
+          localStorage.setItem(THEME_KEY, theme);
+        } catch (err) {
+          // ignore storage errors
+        }
+        if (theme === 'dark') {
+          themeIcon.textContent = '☀️';
+          themeLabel.textContent = '暖阳玻璃日间 / Warm Daylight';
+        } else {
+          themeIcon.textContent = '🌙';
+          themeLabel.textContent = '流光玻璃暗夜 / Aurora Dark';
+        }
+      }
+
+      function loadTodos() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw === null) return defaultTodos;
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (err) {
+          return [];
+        }
+      }
+
+      function saveTodos() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+        } catch (err) {
+          console.warn('Failed to save todos:', err);
+        }
+      }
+
+      function showToast(message) {
+        toastBanner.textContent = message;
+        toastBanner.classList.add('show');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastBanner.classList.remove('show');
+        }, 2400);
+      }
+
+      function renderDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const krDays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+        const cnDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+        const idx = now.getDay();
+        bilingualDateEl.textContent = `${year}.${month}.${day} · ${krDays[idx]} / ${cnDays[idx]}`;
+      }
+
+      function getNowTime() {
+        const now = new Date();
+        return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      }
+
+      function getDueBadgeInfo(dueDate, completed) {
+        if (!dueDate) return null;
+        const today = getTodayISO();
+        if (completed) {
+          return { text: `마감 ${dueDate} / 截止 ${dueDate}`, cls: 'badge-due' };
+        }
+        if (dueDate === today) {
+          return { text: `오늘 마감 / 今日截止 (${dueDate})`, cls: 'badge-due-today' };
+        }
+        if (dueDate < today) {
+          return { text: `기한 초과 / 已逾期 (${dueDate})`, cls: 'badge-due-overdue' };
+        }
+        return { text: `마감 ${dueDate} / 截止 ${dueDate}`, cls: 'badge-due' };
+      }
+
+      function updateProgress() {
+        const total = todos.length;
+        const completed = todos.filter(t => t.completed).length;
+        const remaining = total - completed;
+        const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+        ringFill.style.strokeDashoffset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
+        ringPercent.textContent = `${pct}%`;
+        progressCount.textContent = `${completed} / ${total} 완료 · 已完成`;
+        remainingTextEl.textContent = `남은 할 일 ${remaining}건 / 剩余 ${remaining} 项`;
+
+        clearCompletedBtn.disabled = completed === 0;
+        exportSummaryBtn.disabled = total === 0;
+        clearAllBtn.disabled = total === 0;
+      }
+
+      function positionTabPill(activeBtn) {
+        if (!activeBtn) return;
+        tabPill.style.width = `${activeBtn.offsetWidth}px`;
+        tabPill.style.transform = `translateX(${activeBtn.offsetLeft - 3}px)`;
+      }
+
+      function getFilteredAndSortedTodos() {
+        const q = searchQuery.trim().toLowerCase();
+
+        const filtered = todos.filter(item => {
+          if (statusFilter === 'active' && item.completed) return false;
+          if (statusFilter === 'completed' && !item.completed) return false;
+          if (categoryFilter !== 'all' && item.category !== categoryFilter) return false;
+          if (q) {
+            const catText = (CATEGORY_LABELS[item.category] || '').toLowerCase();
+            const matchText = item.text.toLowerCase().includes(q);
+            const matchCat = catText.includes(q);
+            if (!matchText && !matchCat) return false;
+          }
+          return true;
+        });
+
+        const sorted = [...filtered];
+        if (sortBy === 'priority') {
+          sorted.sort((a, b) => {
+            if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+            return (PRIORITY_WEIGHT[b.priority] || 2) - (PRIORITY_WEIGHT[a.priority] || 2);
+          });
+        } else if (sortBy === 'dueDate') {
+          sorted.sort((a, b) => {
+            if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+            if (!a.dueDate && !b.dueDate) return 0;
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return a.dueDate.localeCompare(b.dueDate);
+          });
+        } else {
+          sorted.sort((a, b) => {
+            if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+            return 0;
+          });
+        }
+
+        return sorted;
+      }
+
+      function startInlineEdit(todo, textEl, bodyEl) {
+        if (bodyEl.querySelector('.inline-edit-input')) return;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'inline-edit-input';
+        input.value = todo.text;
+
+        textEl.style.display = 'none';
+        bodyEl.insertBefore(input, textEl.nextSibling);
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+
+        let finished = false;
+        const commit = () => {
+          if (finished) return;
+          finished = true;
+          const nextVal = input.value.trim();
+          if (!nextVal) {
+            input.remove();
+            textEl.style.display = '';
+            openModal(alertModal);
+            alertConfirmBtn.focus();
+            return;
+          }
+          todos = todos.map(t => t.id === todo.id ? { ...t, text: nextVal } : t);
+          saveTodos();
+          renderList();
+          showToast('수정되었습니다 / 已更新待办');
+        };
+
+        const cancel = () => {
+          if (finished) return;
+          finished = true;
+          input.remove();
+          textEl.style.display = '';
+        };
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            commit();
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            cancel();
+          }
+        });
+
+        input.addEventListener('blur', commit);
+      }
+
+      function renderList() {
+        const items = getFilteredAndSortedTodos();
+        todoListEl.innerHTML = '';
+
+        if (items.length === 0) {
+          emptyStateEl.classList.add('visible');
+          if (todos.length === 0) {
+            emptyTitleEl.textContent = '등록된 할 일이 없습니다 / 暂无待办事项';
+            emptyDescEl.textContent = '위 입력창에 새로운 일정을 추가해 보세요 / 请在上方输入框添加新的任务';
+          } else if (searchQuery.trim() || categoryFilter !== 'all') {
+            emptyTitleEl.textContent = '조건에 맞는 할 일이 없습니다 / 没有匹配的待办事项';
+            emptyDescEl.textContent = '검색어나 필터 조건을 변경해 보세요 / 请尝试更改搜索词或筛选条件';
+          } else if (statusFilter === 'active') {
+            emptyTitleEl.textContent = '진행 중인 할 일이 없습니다 / 暂无进行中的待办';
+            emptyDescEl.textContent = '모든 일정을 완료하셨습니다! / 所有任务均已完成！';
+          } else {
+            emptyTitleEl.textContent = '완료된 할 일이 없습니다 / 暂无已完成的待办';
+            emptyDescEl.textContent = '할 일을 체크하여 완료 처리해 보세요 / 勾选任务即可标记为已完成';
+          }
+        } else {
+          emptyStateEl.classList.remove('visible');
+          items.forEach(todo => {
+            const li = document.createElement('li');
+            li.className = `todo-item${todo.completed ? ' completed' : ''}${todo.pinned ? ' pinned' : ''}`;
+            li.dataset.id = todo.id;
+
+            const statusBadge = todo.completed
+              ? '<span class="badge badge-status-done">완료됨 / 已完成</span>'
+              : '<span class="badge badge-status-active">진행 중 / 进行中</span>';
+
+            const catLabel = CATEGORY_LABELS[todo.category] || CATEGORY_LABELS.other;
+            const prioLabel = PRIORITY_LABELS[todo.priority] || PRIORITY_LABELS.normal;
+            const prioClass =
+              todo.priority === 'high'
+                ? 'badge-prio-high'
+                : todo.priority === 'low'
+                ? 'badge-prio-low'
+                : 'badge-prio-normal';
+
+            const dueInfo = getDueBadgeInfo(todo.dueDate, todo.completed);
+            const dueHtml = dueInfo
+              ? `<span class="badge ${dueInfo.cls}">${dueInfo.text}</span>`
+              : '';
+
+            li.innerHTML = `
+              <div class="todo-left">
+                <button
+                  type="button"
+                  class="checkbox-custom"
+                  role="checkbox"
+                  aria-checked="${todo.completed}"
+                  aria-label="완료 표시 / 标记完成"
+                >
+                  <svg class="check-svg" viewBox="0 0 16 16">
+                    <polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline>
+                  </svg>
+                </button>
+                <div class="todo-body">
+                  <span class="todo-text" title="더블클릭하여 수정 / 双击直接编辑"></span>
+                  <div class="todo-badges">
+                    ${statusBadge}
+                    <span class="badge badge-cat">${catLabel}</span>
+                    <span class="badge ${prioClass}">${prioLabel}</span>
+                    ${dueHtml}
+                    <span class="todo-time">${todo.createdAt}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="todo-actions">
+                <button
+                  type="button"
+                  class="icon-action-btn star-btn${todo.pinned ? ' is-starred' : ''}"
+                  title="중요 고정 / 星标置顶"
+                  aria-label="중요 고정 / 星标置顶"
+                >
+                  <span>${todo.pinned ? '★' : '☆'}</span>
+                </button>
+                <button
+                  type="button"
+                  class="icon-action-btn del-btn"
+                  aria-label="삭제 / 删除"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  <span>삭제 / 删除</span>
+                </button>
+              </div>
+            `;
+
+            const textSpan = li.querySelector('.todo-text');
+            const bodyDiv = li.querySelector('.todo-body');
+            textSpan.textContent = todo.text;
+
+            // Checkbox toggle
+            li.querySelector('.checkbox-custom').addEventListener('click', () => {
+              toggleTodo(todo.id);
+            });
+
+            // Double-click inline edit
+            textSpan.addEventListener('dblclick', (e) => {
+              e.stopPropagation();
+              startInlineEdit(todo, textSpan, bodyDiv);
+            });
+
+            // Star pin toggle
+            li.querySelector('.star-btn').addEventListener('click', (e) => {
+              e.stopPropagation();
+              togglePin(todo.id);
+            });
+
+            // Single item delete
+            li.querySelector('.del-btn').addEventListener('click', (e) => {
+              e.stopPropagation();
+              deleteTodo(todo.id, li);
+            });
+
+            todoListEl.appendChild(li);
+          });
+        }
+
+        updateProgress();
+      }
+
+      function addTodo(text) {
+        const item = {
+          id: 'todo-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+          text,
+          completed: false,
+          pinned: false,
+          category: categorySelect.value || 'work',
+          priority: prioritySelect.value || 'normal',
+          dueDate: dueDateInput.value || '',
+          createdAt: getNowTime()
+        };
+        todos.unshift(item);
+        saveTodos();
+        renderList();
+        showToast('할 일이 추가되었습니다 / 已添加待办');
+      }
+
+      function toggleTodo(id) {
+        todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+        saveTodos();
+        renderList();
+      }
+
+      function togglePin(id) {
+        todos = todos.map(t => t.id === id ? { ...t, pinned: !t.pinned } : t);
+        saveTodos();
+        renderList();
+      }
+
+      function deleteTodo(id, liEl) {
+        if (liEl) {
+          liEl.classList.add('removing');
+          setTimeout(() => {
+            todos = todos.filter(t => t.id !== id);
+            saveTodos();
+            renderList();
+            showToast('삭제되었습니다 / 已删除待办');
+          }, 220);
+        } else {
+          todos = todos.filter(t => t.id !== id);
+          saveTodos();
+          renderList();
+        }
+      }
+
+      function clearCompletedTodos() {
+        const beforeCount = todos.length;
+        todos = todos.filter(t => !t.completed);
+        if (todos.length < beforeCount) {
+          saveTodos();
+          renderList();
+          showToast('완료된 할 일을 정리했습니다 / 已清理已完成事项');
+        }
+      }
+
+      function clearAllTodos() {
+        todos = [];
+        saveTodos();
+        renderList();
+        showToast('전체 삭제되었습니다 / 已清空全部待办');
+      }
+
+      function copyBilingualSummary() {
+        if (todos.length === 0) return;
+        const doneCount = todos.filter(t => t.completed).length;
+        const lines = [
+          `📋 할 일 요약 / 待办清单摘要 (${doneCount}/${todos.length} 완료 · 已完成)`,
+          '----------------------------------------'
+        ];
+        todos.forEach((t, idx) => {
+          const mark = t.completed ? '[✓]' : '[ ]';
+          const pin = t.pinned ? '★ ' : '';
+          const cat = CATEGORY_LABELS[t.category] || '';
+          const due = t.dueDate ? ` | 마감/截止: ${t.dueDate}` : '';
+          lines.push(`${idx + 1}. ${mark} ${pin}${t.text} (${cat}${due})`);
+        });
+        const summary = lines.join('\n');
+
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = summary;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          showToast('요약이 복사되었습니다 / 清单摘要已复制');
+        } catch (err) {
+          showToast('복사에 실패했습니다 / 复制失败');
+        }
+      }
+
+      // Modals
+      function openModal(el) {
+        el.classList.add('open');
+      }
+
+      function closeModal(el) {
+        el.classList.remove('open');
+      }
+
+      // Form Submit & Empty Input Validation Modal
+      todoForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const trimmed = todoInput.value.trim();
+        if (!trimmed) {
+          openModal(alertModal);
+          alertConfirmBtn.focus();
+          return;
+        }
+        addTodo(trimmed);
+        todoInput.value = '';
+        dueDateInput.value = '';
+        todoInput.focus();
+      });
+
+      alertConfirmBtn.addEventListener('click', () => {
+        closeModal(alertModal);
+        todoInput.focus();
+      });
+
+      alertModal.addEventListener('click', (e) => {
+        if (e.target === alertModal) {
+          closeModal(alertModal);
+          todoInput.focus();
+        }
+      });
+
+      // Clear All & Confirmation Modal
+      clearAllBtn.addEventListener('click', () => {
+        if (todos.length === 0) return;
+        openModal(confirmModal);
+        confirmCancelBtn.focus();
+      });
+
+      confirmCancelBtn.addEventListener('click', () => {
+        closeModal(confirmModal);
+      });
+
+      confirmOkBtn.addEventListener('click', () => {
+        clearAllTodos();
+        closeModal(confirmModal);
+      });
+
+      confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+          closeModal(confirmModal);
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (alertModal.classList.contains('open')) closeModal(alertModal);
+          if (confirmModal.classList.contains('open')) closeModal(confirmModal);
+        }
+      });
+
+      // Batch buttons
+      clearCompletedBtn.addEventListener('click', clearCompletedTodos);
+      exportSummaryBtn.addEventListener('click', copyBilingualSummary);
+
+      // Search & Sort
+      searchInput.addEventListener('input', () => {
+        searchQuery = searchInput.value;
+        searchClearBtn.classList.toggle('visible', searchQuery.length > 0);
+        renderList();
+      });
+
+      searchClearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchQuery = '';
+        searchClearBtn.classList.remove('visible');
+        renderList();
+        searchInput.focus();
+      });
+
+      sortSelect.addEventListener('change', () => {
+        sortBy = sortSelect.value;
+        renderList();
+      });
+
+      // Status Tabs
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          statusFilter = btn.dataset.status;
+          positionTabPill(btn);
+          renderList();
+        });
+      });
+
+      // Category Filter Pills
+      categoryPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          categoryPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          categoryFilter = pill.dataset.category;
+          renderList();
+        });
+      });
+
+      // Theme Toggle
+      themeToggleBtn.addEventListener('click', () => {
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+      });
+
+      // Subtle Card Spotlight & Tilt
+      appShell.addEventListener('mouseenter', () => {
+        if (window.matchMedia('(pointer: fine)').matches) {
+          appShell.classList.add('is-tilting');
+        }
+      });
+
+      appShell.addEventListener('mousemove', (e) => {
+        const rect = appShell.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        spotlight.style.setProperty('--mouse-x', `${x}px`);
+        spotlight.style.setProperty('--mouse-y', `${y}px`);
+
+        if (window.matchMedia('(pointer: fine)').matches) {
+          const nx = (x / rect.width) - 0.5;
+          const ny = (y / rect.height) - 0.5;
+          appShell.style.setProperty('--tilt-x', `${(-ny * 1.8).toFixed(2)}deg`);
+          appShell.style.setProperty('--tilt-y', `${(nx * 1.8).toFixed(2)}deg`);
+        }
+      });
+
+      appShell.addEventListener('mouseleave', () => {
+        appShell.classList.remove('is-tilting');
+        appShell.style.setProperty('--tilt-x', '0deg');
+        appShell.style.setProperty('--tilt-y', '0deg');
+      });
+
+      window.addEventListener('resize', () => {
+        const activeBtn = filterTabs.querySelector('.tab-btn.active');
+        positionTabPill(activeBtn);
+      });
+
+      // Init
+      applyTheme(currentTheme);
+      renderDate();
+      renderList();
+      requestAnimationFrame(() => {
+        const activeBtn = filterTabs.querySelector('.tab-btn.active');
+        positionTabPill(activeBtn);
+      });
+    })();
+  </script>
+</body>
+</html>
